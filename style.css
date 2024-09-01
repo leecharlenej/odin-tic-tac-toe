@@ -1,13 +1,13 @@
 .board {
     display: grid;
-    height: 500px;
-    width: 500px;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    height: 300px;
+    width: 300px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     border: 1px solid black;
     gap: 2px;
     padding: 2px;
-    background-color: yellow;
+    background-color: rgb(152, 223, 245);
   }
   
   .cell {

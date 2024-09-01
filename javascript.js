@@ -1,5 +1,3 @@
-console.log('test');
-
 let logMessage = true;
 
 function log(message) {
@@ -42,7 +40,11 @@ function Gameboard() {
         console.log(boardWithCellValues);
     };
 
-    return { getBoard, dropToken, printBoard };
+    return {
+        getBoard: getBoard,
+        dropToken: dropToken,
+        printBoard: printBoard
+    };
 
 }
 
@@ -54,7 +56,6 @@ function Cell() {
     }
 
     const getValue = () => value;
-
     return {addToken, getValue};
 }
 
@@ -97,12 +98,12 @@ function GameController (
             printNewRound();
         } else {
             console.log(`${winner} wins the game!`);
+            return winner;
         };
     }
 
     printNewRound();
-
-    return {playRound, getActivePlayer};
+    return {playRound, getActivePlayer, getBoard: board.getBoard};
 }
 
 function checkForWinner(board, token) {
@@ -149,13 +150,14 @@ function checkForWinner(board, token) {
     return false;
 }
     
-
+// This is for console version.
 // const game = GameController();
 
 function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+    let winner = null;
   
     const updateScreen = () => {
       // clear the board
@@ -166,17 +168,25 @@ function ScreenController() {
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
-      playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
+      if (winner) {
+        playerTurnDiv.textContent = `Player ${winner} wins!`;
+    } else {
+        // Display player's turn
+        playerTurnDiv.textContent = `Player ${activePlayer.name}'s turn...`;
+    }
   
       // Render board squares
-      board.forEach(row => {
-        row.forEach((cell, index) => {
+      board.forEach((row, rowIndex) => {
+        row.forEach((cell, columnIndex) => {
           // Anything clickable should be a button!!
           const cellButton = document.createElement("button");
           cellButton.classList.add("cell");
+
           // Create a data attribute to identify the column
           // This makes it easier to pass into our `playRound` function 
-          cellButton.dataset.column = index
+          cellButton.dataset.row = rowIndex;
+          cellButton.dataset.column = columnIndex;
+
           cellButton.textContent = cell.getValue();
           boardDiv.appendChild(cellButton);
         })
@@ -185,12 +195,18 @@ function ScreenController() {
   
     // Add event listener for the board
     function clickHandlerBoard(e) {
-      const selectedColumn = e.target.dataset.column;
-      // Make sure I've clicked a column and not the gaps in between
-      if (!selectedColumn) return;
+        
+        if (winner){return;}
+
+        const selectedRow = e.target.dataset.row;
+        const selectedColumn = e.target.dataset.column;
+        // Make sure I've clicked a column and not the gaps in between
+        if (!selectedRow && !selectedColumn) return;
       
-      game.playRound(selectedColumn);
-      updateScreen();
+        winner = game.playRound(selectedRow, selectedColumn);
+        log(`clickHandlerBoard: ${winner ==='X'}`);
+        
+        updateScreen();
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
   
