@@ -157,7 +157,7 @@ function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
-    let winner = null;
+    let winnerFlag = null;
   
     const updateScreen = () => {
       // clear the board
@@ -168,8 +168,8 @@ function ScreenController() {
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
-      if (winner) {
-        playerTurnDiv.textContent = `Player ${winner} wins!`;
+      if (winnerFlag) {
+        playerTurnDiv.textContent = `Player ${winnerFlag} wins!`;
     } else {
         // Display player's turn
         playerTurnDiv.textContent = `Player ${activePlayer.name}'s turn...`;
@@ -196,18 +196,19 @@ function ScreenController() {
     // Add event listener for the board
     function clickHandlerBoard(e) {
         
-        if (winner){return;}
+        if (winnerFlag){return;}
 
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
         // Make sure I've clicked a column and not the gaps in between
         if (!selectedRow && !selectedColumn) return;
       
-        winner = game.playRound(selectedRow, selectedColumn);
-        log(`clickHandlerBoard: ${winner ==='X'}`);
+        winnerFlag = game.playRound(selectedRow, selectedColumn);
+        log(`clickHandlerBoard: ${winnerFlag ==='X'}`);
         
         updateScreen();
     }
+    
     boardDiv.addEventListener("click", clickHandlerBoard);
   
     // Initial render

@@ -1,3 +1,9 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+  display: grid;
+  justify-items: center;
+}
+
 .board {
     display: grid;
     height: 300px;
@@ -6,7 +12,7 @@
     grid-template-rows: repeat(3, 1fr);
     border: 1px solid black;
     gap: 2px;
-    padding: 2px;
+    padding: 10px;
     background-color: rgb(152, 223, 245);
   }
   
